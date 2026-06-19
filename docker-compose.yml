@@ -1,6 +1,6 @@
 services:
   postgres:
-    images: postgres:16-alpine
+    image: postgres:16-alpine
     container_name: ecommerce_postgres
     restart: unless-stopped
     environment:
@@ -9,7 +9,7 @@ services:
       POSTGRES_DB: ecommerce_db
     ports:
       - "5432:5432"
-    volumnes:
+    volumes:
       - pgdata:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 volumes:
