@@ -2,6 +2,7 @@ const {
     addProduct,
     editProduct,
     removeProduct,
+    listProducts,
 } = require ("../services/product.service");
 
 const create = async (req, res) => {
@@ -53,4 +54,19 @@ const remove = async (req, res) => {
     }
 };
 
-module.exports = { create, update, remove };
+const list = async (req, res) => {
+    try {
+        const result = await listProducts(req.query);
+        res.status(200).json({
+            status: "ok",
+            ...result,
+        });
+    } catch (error) {
+        res.status(error.statusCode || 500).json({
+            status: "error",
+            message: error.message || "Error al listar los productos",
+        });
+    }
+};
+
+module.exports = { create, update, remove, list };

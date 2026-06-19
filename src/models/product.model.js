@@ -37,9 +37,75 @@ const deleteProduct = async (id) => {
     return result.rows[0];
 };
 
+const getProducts = async ({ category, search, minPrice, maxPrice, limit, offset }) => {
+    const conditions = [];
+    const values = [];
+    let i = 1;
+
+    if (category) {
+        conditions.push(`category = $${i++}`);
+        values.push(category);
+    }
+    if (search) {
+        conditions.push(`name ILIKE $${i++}`);
+        values.push(`%${search}%`);
+    }
+    if (minPrice !== undefined) {
+        conditions.push(`price >= $${i++}`);
+        values.push(minPrice);
+    }
+    if (maxPrice !== undefined) {
+        conditions.push(`price <= $${i++}`);
+        values.push(maxPrice);
+    }
+
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+
+    const query = `
+        SELECT * FROM products
+        ${whereClause}
+        ORDER BY created_at DESC
+        LIMIT $${i++} OFFSET $${i++}
+    `;
+    values.push(limit, offset);
+
+    const result = await pool.query(query, values);
+    return result.rows;
+};
+
+const countProducts = async ({ category, search, minPrice, maxPrice }) => {
+    const conditions = [];
+    const values = [];
+    let i = 1;
+
+    if (category) {
+        conditions.push(`category = $${i++}`);
+        values.push(category);
+    }
+    if (search) {
+        conditions.push(`name ILIKE $${i++}`);
+        values.push(`%${search}%`);
+    }
+    if (minPrice !== undefined) {
+        conditions.push(`price >= $${i++}`);
+        values.push(minPrice);
+    }
+    if (maxPrice !== undefined) {
+        conditions.push(`price <= $${i++}`);
+        values.push(maxPrice);
+    }
+
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+
+    const result = await pool.query(`SELECT COUNT(*) FROM products ${whereClause}`, values);
+    return parseInt(result.rows[0].count, 10);
+};
+
 module.exports = {
     createProduct,
     findProductById,
     updateProduct,
     deleteProduct,
+    getProducts,
+    countProducts,
 };
