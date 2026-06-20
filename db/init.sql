@@ -50,5 +50,5 @@ CREATE TABLE order_items (
 
 CREATE INDEX idx_products_category ON products(category);
 CREATE INDEX idx_cart_items_cart ON cart_items(cart_id);
-CREATE INDEX idx_orders_user ON orders(user_id):
+CREATE INDEX idx_orders_user ON orders(user_id);
 CREATE INDEX idx_order_items_order ON order_items(order_id);

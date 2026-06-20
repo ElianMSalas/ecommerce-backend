@@ -17,7 +17,7 @@ const create = async (req, res) => {
     } catch (error) {
         res.status(error.statusCode || 500).json({
             status: "error",
-            messsage: error.message || "Error al crear el producto",
+            message: error.message || "Error al crear el producto",
         });
     }
 };
