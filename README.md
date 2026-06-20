@@ -183,3 +183,6 @@ curl -X POST http://localhost:3000/api/auth/login \
 - Refresh tokens y revocación.
 - Estados de pedido y pasarela de pago.
 - Documentación OpenAPI/Swagger.
+
+IDEAL FINAL
+<img width="347" height="720" alt="Captura de pantalla 2026-06-19 232241" src="https://github.com/user-attachments/assets/8b6c8d47-6f09-455b-9bff-0d40d164fe8d" />
