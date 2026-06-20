@@ -60,4 +60,15 @@ const listProducts = async (filters) => {
     };
 };
 
-module.exports = { addProduct, editProduct, removeProduct, listProducts };
+const getProductById = async (id) => {
+    const product = await findProductById(id);
+    if (!product) {
+        const error = new Error("Producto no encontrado");
+        error.statusCode = 404;
+        throw error;
+    }
+    return product;
+};
+
+
+module.exports = { addProduct, editProduct, removeProduct, listProducts, getProductById };

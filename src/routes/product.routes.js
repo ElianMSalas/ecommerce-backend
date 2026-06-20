@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { create, update, remove, list } = require("../controllers/product.controller");
+const { create, update, remove, list, getOne } = require("../controllers/product.controller");
 const { productValidation } = require("../middlewares/validators/product.validator");
 const { handleValidation } = require("../middlewares/handleValidation");
 const { authenticate } = require("../middlewares/auth.middleware");
@@ -10,5 +10,6 @@ router.post("/", authenticate, isAdmin, productValidation, handleValidation, cre
 router.put("/:id", authenticate, isAdmin, productValidation, handleValidation, update);
 router.delete("/:id", authenticate, isAdmin, remove);
 router.get("/", list);
+router.get("/:id", getOne);
 
 module.exports = router;

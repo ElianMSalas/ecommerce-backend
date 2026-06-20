@@ -3,6 +3,7 @@ const {
     editProduct,
     removeProduct,
     listProducts,
+    getProductById
 } = require ("../services/product.service");
 
 const create = async (req, res) => {
@@ -69,4 +70,20 @@ const list = async (req, res) => {
     }
 };
 
-module.exports = { create, update, remove, list };
+const getOne = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const product = await getProductById(id);
+        res.status(200).json({
+            status: "ok",
+            product,
+        });
+    } catch (error) {
+        res.status(error.statusCode || 500).json({
+            status: "error",
+            message: error.message || "Error al obtener el producto",
+        });
+    }
+};
+
+module.exports = { create, update, remove, list, getOne, };
