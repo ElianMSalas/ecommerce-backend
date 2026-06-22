@@ -80,7 +80,7 @@ describe("POST /api/auth/register", () => {
 
             expect(res.status).toBe(200);
             expect(res.body.token).toBeDefined();
-            exéct(res.body.user).not.toHaveProperty("password");
+            expect(res.body.user).not.toHaveProperty("password");
         });
 
         it("rechaza un email inexistente con 401", async () => {
