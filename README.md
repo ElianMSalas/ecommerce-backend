@@ -12,6 +12,7 @@ API REST de un ecommerce construida con **Node.js**, **Express 5** y **PostgreSQ
 - [Variables de entorno](#variables-de-entorno)
 - [Ejecución con Docker](#ejecución-con-docker)
 - [Ejecución local](#ejecución-local)
+- [Tests](#tests)
 - [Endpoints](#endpoints)
 - [Decisiones técnicas](#decisiones-técnicas)
 
@@ -24,6 +25,7 @@ API REST de un ecommerce construida con **Node.js**, **Express 5** y **PostgreSQ
 - Creación de pedidos dentro de una **transacción SQL** con bloqueo de filas (`SELECT ... FOR UPDATE`) para evitar condiciones de carrera sobre el stock.
 - Validación de entrada con `express-validator`.
 - Seguridad básica con `helmet` y `cors`.
+- Suite de tests automatizados con Jest y Supertest.
 
 ## Stack
 
@@ -36,6 +38,7 @@ API REST de un ecommerce construida con **Node.js**, **Express 5** y **PostgreSQ
 | Validación | express-validator |
 | Seguridad | helmet, cors |
 | Logs | morgan |
+| Tests | Jest, Supertest |
 | Infra | Docker, Docker Compose |
 
 ## Arquitectura
@@ -115,6 +118,16 @@ curl http://localhost:3000/health
 # { "status": "ok" }
 ```
 
+## Tests
+
+El proyecto incluye una suite de tests de integración con Jest y Supertest. Los tests **mockean la capa de acceso a datos**, por lo que no requieren una base de datos en ejecución.
+
+```bash
+npm test
+```
+
+Cubren el flujo de autenticación (registro, login, validación de entrada y manejo de credenciales inválidas) y el de productos (listado con paginación, detalle, y protección de rutas por rol de usuario).
+
 ## Endpoints
 
 Base URL: `/api`. Las rutas marcadas con 🔒 requieren `Authorization: Bearer <token>`. Las marcadas con 👑 requieren rol `admin`.
@@ -174,15 +187,13 @@ curl -X POST http://localhost:3000/api/auth/login \
 - **Consultas parametrizadas**: todo el acceso a datos usa parámetros (`$1, $2...`) para prevenir inyección SQL.
 - **Errores con código de estado**: los servicios lanzan errores con una propiedad `statusCode` que los controllers traducen a respuestas HTTP.
 - **Separación en capas**: routes → controllers → services → models, lo que facilita testear y mantener cada parte de forma aislada.
+- **Tests con mocks**: la suite mockea la capa de modelos para correr de forma rápida y aislada, sin depender de una base de datos real.
 - **Contenedor no-root**: el `Dockerfile` ejecuta la app con el usuario `node` en lugar de root, siguiendo buenas prácticas de seguridad.
 
 ## Posibles mejoras futuras
 
-- Suite de tests automatizados (Jest + Supertest).
 - Rate limiting en el login y manejador de errores global centralizado.
 - Refresh tokens y revocación.
 - Estados de pedido y pasarela de pago.
+- Integración continua (CI) que ejecute los tests en cada push.
 - Documentación OpenAPI/Swagger.
-
-IDEAL FINAL
-<img width="347" height="720" alt="Captura de pantalla 2026-06-19 232241" src="https://github.com/user-attachments/assets/8b6c8d47-6f09-455b-9bff-0d40d164fe8d" />
